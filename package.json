@@ -1,5 +1,5 @@
 {
-  "name": "lit-element-context",
+  "name": "lit-element-simple-context",
   "version": "1.0.0",
   "description": "Webcomponent lit-element-context following open-wc recommendations",
   "author": "csabai <csaba.ivancza@gmail.com>",
