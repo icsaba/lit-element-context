@@ -48,5 +48,11 @@
       "eslint --fix",
       "prettier --write"
     ]
-  }
+  },
+  "keywords": [
+    "webcomponents",
+    "lit-element",
+    "context",
+    "state"
+  ]
 }
