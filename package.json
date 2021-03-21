@@ -4,8 +4,8 @@
   "description": "Webcomponent lit-element-context following open-wc recommendations",
   "author": "csabai <csaba.ivancza@gmail.com>",
   "license": "MIT",
-  "main": "index.js",
-  "module": "index.js",
+  "main": "context.js",
+  "module": "context.js",
   "scripts": {
     "start": "web-dev-server",
     "lint": "eslint --ext .js,.html . --ignore-path .gitignore && prettier \"**/*.js\" --check --ignore-path .gitignore",
