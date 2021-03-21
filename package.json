@@ -6,6 +6,7 @@
   "license": "MIT",
   "main": "context.js",
   "module": "context.js",
+  "homepage": "https://github.com/icsaba/lit-element-context",
   "scripts": {
     "start": "web-dev-server",
     "lint": "eslint --ext .js,.html . --ignore-path .gitignore && prettier \"**/*.js\" --check --ignore-path .gitignore",
