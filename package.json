@@ -1,11 +1,11 @@
 {
   "name": "lit-element-simple-context",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Webcomponent lit-element-context following open-wc recommendations",
   "author": "csabai <csaba.ivancza@gmail.com>",
   "license": "MIT",
-  "main": "context.js",
-  "module": "context.js",
+  "main": "src/context.js",
+  "module": "src/context.js",
   "homepage": "https://github.com/icsaba/lit-element-context",
   "scripts": {
     "start": "web-dev-server",
