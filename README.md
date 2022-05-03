@@ -40,6 +40,16 @@ class MyLitComponent extends LitElement {
 }
 ```
 
+change a value in the store once the component is connected to the store
+```javascript
+this.setProp('somepropFromContext2', 0);
+```
+
+change a value in the store if the component is not connected to the store
+```javascript
+context.setProp('someprop', context.state.someprop + 1);
+```
+
 that's it!! there is no need of tons of boilerplate code and every component gets the fresh data on change.
 
 ## Testing with Web Test Runner

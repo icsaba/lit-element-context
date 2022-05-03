@@ -5,7 +5,6 @@ class LitInnerComponent extends LitElement {
 
   static get properties() {
     return {
-      someprop: {type: Number},
       renamedProp: {type: Number}
     }
   }
