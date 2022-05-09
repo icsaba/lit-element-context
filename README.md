@@ -11,11 +11,16 @@ you can find a working example in the `test/components` folder.
 init the context where ever you want
 
 ```javascript
+import context from 'lit-element-simple-context';
+
 context.init({propName: someval, propName2: {nestedData: []} });
 ```
 
 connect a lit component to the context
 ```javascript
+import { LitElement } from 'lit';
+import context from 'lit-element-simple-context';
+
 class MyLitComponent extends LitElement {}
 
 window.customElements.define('my-lit-component', context.connect(MyLitComponent));
@@ -47,6 +52,8 @@ this.setProp('somepropFromContext2', 0);
 
 change a value in the store if the component is not connected to the store
 ```javascript
+import context from 'lit-element-simple-context';
+
 context.setProp('someprop', context.state.someprop + 1);
 ```
 
