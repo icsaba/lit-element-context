@@ -7,7 +7,7 @@ class LitInnerComponent extends LitElement {
   static get properties() {
     return {
       // renamedProp: {type: Number},
-      someprop: {type: Number, fromContext: true},
+      renamedProp: {type: Number, fromContext: true, contextKey: 'someprop'},
       value1: {type: String, fromContext: true},
       value2: {type: String, fromContext: true}
     }
@@ -24,7 +24,7 @@ class LitInnerComponent extends LitElement {
   render() {
     return html`
       <div>
-        Value of the prop: <span id="result">${this.someprop}</span>
+        Value of the prop: <span id="result">${this.renamedProp}</span>
 
         <button @click=${() => this.setProp('someprop', 0) }>reset</button>
       </div>

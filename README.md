@@ -11,6 +11,9 @@ you can find a working example in the `test/components` folder.
 
 ## New features
 
+Version 1.0.9
+- [x] rename prop with `contextKey` attribute
+
 Version 1.0.6
 - [x] `fromContext` attribute in the `properties` getter
 
@@ -38,14 +41,15 @@ class MyLitComponent extends LitElement {}
 window.customElements.define('my-lit-component', context.connect(MyLitComponent));
 ```
 
-To specify the props you need from context in your component, you should set `fromContext` attribute in the `properties` getter. It does NOT support renaming. The purpose of that is: I believe that using the same variable name everywhere leads to less confusion.
+To specify the props you need from context in your component, you should set `fromContext` attribute in the `properties` getter. 
+If the lit property name is different what you use in the store, you can specify it with `contextKey` attribute
 
 ```javascript
 class MyLitComponent extends LitElement {
   static get properties() {
     return {
       somepropFromContext: {type: Number, fromContext: true},
-      someprop: {type: String, fromContext: true}
+      renamedProp: {type: String, fromContext: true, contextKey: 'somepropInTheStore'}
     }
   }
 }

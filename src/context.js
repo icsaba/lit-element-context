@@ -32,14 +32,16 @@ class Context {
     } else {
       Object.entries(component.properties)
       .filter(([, value]) => value.fromContext)
-      .forEach( ([propName]) => {
-        if (!(propName in this.observers)) {
-          this.observers[propName] = [];
+      .forEach( ([aliasName, value]) => {
+        const key = 'contextKey' in value ? value.contextKey : aliasName;
+
+        if (!(key in this.observers)) {
+          this.observers[key] = [];
         }
 
-        this.observers[propName].push(new Observer(propName, componentInstance));
-        if (propName in this.state) {
-          componentInstance[propName] = this.state[propName];
+        this.observers[key].push(new Observer(aliasName, componentInstance));
+        if (key in this.state) {
+          componentInstance[aliasName] = this.state[key];
         }
       });
     }
