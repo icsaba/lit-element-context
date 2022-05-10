@@ -29,7 +29,8 @@ export class LitContext extends LitElement {
     super();
 
     context.init({
-      someprop: 3
+      someprop: 3,
+      value1: 'initial value'
     })
   }
 

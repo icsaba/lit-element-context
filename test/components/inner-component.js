@@ -6,24 +6,25 @@ class LitInnerComponent extends LitElement {
 
   static get properties() {
     return {
-      renamedProp: {type: Number},
-      value1: {type: String},
-      value2: {type: String}
+      // renamedProp: {type: Number},
+      someprop: {type: Number, fromtContext: true},
+      value1: {type: String, fromtContext: true},
+      value2: {type: String, fromtContext: true}
     }
   }
 
-  static get propsFromContext() {
-    return {
-      someprop: 'renamedProp',
-      value1: 'value1',
-      value2: 'value2'
-    }
-  }
+  // static get propsFromContext() {
+  //   return {
+  //     someprop: 'renamedProp',
+  //     value1: 'value1',
+  //     value2: 'value2'
+  //   }
+  // }
 
   render() {
     return html`
       <div>
-        Value of the prop: <span id="result">${this.renamedProp}</span>
+        Value of the prop: <span id="result">${this.someprop}</span>
 
         <button @click=${() => this.setProp('someprop', 0) }>reset</button>
       </div>
