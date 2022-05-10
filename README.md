@@ -35,7 +35,20 @@ class MyLitComponent extends LitElement {}
 window.customElements.define('my-lit-component', context.connect(MyLitComponent));
 ```
 
-specify the props you need from context in your component
+To specify the props you need from context in your component, you should set `fromContext` attribute in the `properties` getter. It does NOT support renaming. The purpose of that is: I believe that using the same variable name everywhere leads to less confusion.
+
+```javascript
+class MyLitComponent extends LitElement {
+  static get properties() {
+    return {
+      somepropFromContext: {type: Number, fromtContext: true},
+      someprop: {type: String, fromtContext: true}
+    }
+  }
+}
+```
+
+`@deprecated` way was to provide an other getter, but it just increased the number of boilerplate code
 ```javascript
 class MyLitComponent extends LitElement {
   static get properties() {
@@ -45,6 +58,9 @@ class MyLitComponent extends LitElement {
     }
   }
 
+  /** 
+   * @deprecated
+   */
   static get propsFromContext() {
     return {
       somepropFromContext: 'somepropFromContext',
