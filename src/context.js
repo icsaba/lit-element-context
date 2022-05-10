@@ -17,13 +17,32 @@ class Context {
   }
 
   register(component, componentInstance) {
-    Object.entries(component.propsFromContext).forEach( ([propName, aliasName]) => {
-      if (!(propName in this.observers)) {
-        this.observers[propName] = [];
-      }
+    if (component.propsFromContext) {
+      Object.entries(component.propsFromContext).forEach( ([propName, aliasName]) => {
+        if (!(propName in this.observers)) {
+          this.observers[propName] = [];
+        }
 
-      this.observers[propName].push(new Observer(aliasName, componentInstance));
-    });
+        this.observers[propName].push(new Observer(aliasName, componentInstance));
+
+        if (propName in this.state) {
+          componentInstance[aliasName] = this.state[propName];
+        }
+      });
+    } else {
+      Object.entries(component.properties)
+      .filter(([, value]) => value.fromtContext)
+      .forEach( ([propName]) => {
+        if (!(propName in this.observers)) {
+          this.observers[propName] = [];
+        }
+
+        this.observers[propName].push(new Observer(propName, componentInstance));
+        if (propName in this.state) {
+          componentInstance[propName] = this.state[propName];
+        }
+      });
+    }
   }
 
   /**
@@ -86,12 +105,6 @@ class Context {
         super(...args);
 
         context.register(component, this);
-
-        Object.entries(component.propsFromContext).forEach( ([propName, newName]) => {
-          if (propName in context.state) {
-            this[newName] = context.state[propName];
-          }
-        });
       }
 
       /**
