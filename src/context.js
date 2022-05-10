@@ -43,6 +43,40 @@ class Context {
     }
   }
 
+  /**
+   *
+   * @param {Object<string, any>} props
+   */
+  setProps(props) {
+    Object.entries(props).forEach(([propName, value]) => {
+      this.setProp(propName, value);
+    });
+  }
+
+  /**
+   *
+   * @param {(state: Object, ...params: any[]) => void} callback
+   * @returns {(...params: any[]) => void}
+   */
+  action(callback) {
+    return (...params) => {
+      const nextState = callback(this.state, ...params);
+      this.setProps(nextState);
+    }
+  }
+
+  /**
+   *
+   * @param {(state: Object, ...params: any[]) => Promise<void>} callback
+   * @returns { (...params: any[]) => Promise<void> }
+   */
+  asyncAction(callback) {
+    return async (...params) => {
+      const nextState = await callback(this.state, ...params);
+      this.setProps(nextState);
+    }
+  }
+
   connect( component ) {
     const context = this;
 
@@ -67,6 +101,15 @@ class Context {
        */
       setProp(propName, value) {
         context.setProp(propName, value);
+      }
+
+      /**
+       * Accepts key-value pairs
+       *
+       * @param { Object<string, any>} props
+       */
+      setProps(props) {
+        context.setProps(props);
       }
     }
   }
