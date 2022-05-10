@@ -31,7 +31,7 @@ class Context {
       });
     } else {
       Object.entries(component.properties)
-      .filter(([, value]) => value.fromtContext)
+      .filter(([, value]) => value.fromContext)
       .forEach( ([propName]) => {
         if (!(propName in this.observers)) {
           this.observers[propName] = [];

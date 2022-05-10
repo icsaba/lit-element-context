@@ -44,8 +44,8 @@ To specify the props you need from context in your component, you should set `fr
 class MyLitComponent extends LitElement {
   static get properties() {
     return {
-      somepropFromContext: {type: Number, fromtContext: true},
-      someprop: {type: String, fromtContext: true}
+      somepropFromContext: {type: Number, fromContext: true},
+      someprop: {type: String, fromContext: true}
     }
   }
 }

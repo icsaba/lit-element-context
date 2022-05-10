@@ -7,9 +7,9 @@ class LitInnerComponent extends LitElement {
   static get properties() {
     return {
       // renamedProp: {type: Number},
-      someprop: {type: Number, fromtContext: true},
-      value1: {type: String, fromtContext: true},
-      value2: {type: String, fromtContext: true}
+      someprop: {type: Number, fromContext: true},
+      value1: {type: String, fromContext: true},
+      value2: {type: String, fromContext: true}
     }
   }
 
