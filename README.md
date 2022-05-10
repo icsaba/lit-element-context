@@ -11,6 +11,9 @@ you can find a working example in the `test/components` folder.
 
 ## New features
 
+Version 1.0.6
+- [x] `fromContext` attribute in the `properties` getter
+
 Version 1.0.5
 - [x] actions and async actions
 - [x] setProps method to set multiple values at the same time
