@@ -1,6 +1,6 @@
 {
   "name": "lit-element-simple-context",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Webcomponent lit-element-context following open-wc recommendations",
   "author": "csabai <csaba.ivancza@gmail.com>",
   "license": "MIT",
@@ -15,6 +15,9 @@
     "test": "web-test-runner --coverage",
     "test:watch": "web-test-runner --watch"
   },
+  "files": [
+    "src/**/*.js"
+  ],
   "devDependencies": {
     "@open-wc/eslint-config": "^4.2.0",
     "@open-wc/testing": "^2.5.32",
