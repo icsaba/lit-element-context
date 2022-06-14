@@ -6,15 +6,19 @@ import Observer from './observer.js';
 class Context {
   constructor() {
     this.state = {};
-    this.reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__?.connect({});
+    this.reduxDevTools = null;
 
     /** @type {Object.<string, Observer[]>} */
     this.observers = {};
   }
 
-  init(state) {
+  init(state, enableDevTools = false) {
     this.state = state;
-    this.reduxDevTools?.init(state);
+
+    if (enableDevTools) {
+      this.reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__?.connect({});
+      this.reduxDevTools?.init(state);
+    }
   }
 
   register(component, componentInstance) {
@@ -59,7 +63,9 @@ class Context {
    */
   setProp(propName, value) {
     this.state[propName] = value;
-    this.reduxDevTools?.send('setProp', { [propName]: value });
+    if (this.reduxDevTools) {
+      this.reduxDevTools.send('setProp', { [propName]: value });
+    }
 
     if (propName in this.observers) {
       this.observers[propName].forEach(observer => {
