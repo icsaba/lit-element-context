@@ -11,6 +11,9 @@ you can find a working example in the `test/components` folder.
 
 ## New features
 
+Version 1.0.11
+- [x] added devtools support
+
 Version 1.0.9
 - [x] rename prop with `contextKey` attribute
 
@@ -29,6 +32,14 @@ init the context where ever you want
 import context from 'lit-element-simple-context';
 
 context.init({propName: someval, propName2: {nestedData: []} });
+```
+
+You can use devtools to debug store, pass true as a second parameter to the `init` method.
+
+```javascript
+import context from 'lit-element-simple-context';
+
+context.init({...}, true);
 ```
 
 connect a lit component to the context
