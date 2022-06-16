@@ -11,6 +11,9 @@ you can find a working example in the `test/components` folder.
 
 ## New features
 
+Version 1.0.12
+- [x] added iframe support
+
 Version 1.0.11
 - [x] added devtools support
 
