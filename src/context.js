@@ -12,11 +12,11 @@ class Context {
     this.observers = {};
   }
 
-  init(state, enableDevTools = false) {
+  init(state, target = window, enableDevTools = false) {
     this.state = state;
 
     if (enableDevTools) {
-      this.reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__?.connect({});
+      this.reduxDevTools = target.__REDUX_DEVTOOLS_EXTENSION__?.connect({});
       this.reduxDevTools?.init(state);
     }
   }
