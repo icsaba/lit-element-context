@@ -11,6 +11,9 @@ you can find a working example in the `test/components` folder.
 
 ## New features
 
+Version 1.0.13
+- [x] added meta information to the store init method
+
 Version 1.0.12
 - [x] added iframe support
 
