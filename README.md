@@ -45,6 +45,14 @@ import context from 'lit-element-simple-context';
 context.init({...}, true);
 ```
 
+You can pass devtools options, like store instance name, as third parameter to the `init` method. Watch `devtools-options.d.ts` for available options.
+
+```javascript
+import context from 'lit-element-simple-context';
+
+context.init({...}, true, { name: 'lit context store' });
+```
+
 connect a lit component to the context
 ```javascript
 import { LitElement } from 'lit';

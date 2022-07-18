@@ -3,6 +3,10 @@
 /* eslint-disable max-classes-per-file */
 import Observer from './observer.js';
 
+/**
+ * @typedef { import('../types/devtools-options').DevToolsOptions } devToolsOptions
+ */
+
 class Context {
   constructor() {
     this.state = {};
@@ -12,13 +16,20 @@ class Context {
     this.observers = {};
   }
 
-  init(state, enableDevTools = false, devToolsTarget = window) {
+  /**
+   *
+   * @param { Object } state
+   * @param { boolean } enableDevTools
+   * @param { devToolsOptions } devToolsOptions
+   */
+  init(state, enableDevTools = false, devToolsOptions = {}) {
     this.state = state;
 
     if (enableDevTools) {
-      this.reduxDevTools = devToolsTarget.__REDUX_DEVTOOLS_EXTENSION__?.connect(
-        {}
-      );
+      const { target, ...options } = devToolsOptions;
+      this.reduxDevTools = (
+        target || window
+      ).__REDUX_DEVTOOLS_EXTENSION__?.connect(options);
       this.reduxDevTools?.init(state);
     }
   }
