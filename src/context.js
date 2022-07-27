@@ -12,8 +12,8 @@ class Context {
     this.state = {};
     this.reduxDevTools = null;
 
-    /** @type {Object.<string, Observer[]>} */
-    this.observers = {};
+    /** @type {WeakMap<string, Observer[]>} */
+    this.observers = new WeakMap();
   }
 
   /**
@@ -61,12 +61,32 @@ class Context {
             this.observers[key] = [];
           }
 
-          this.observers[key].push(new Observer(aliasName, componentInstance));
+          const referenceInObserver = this.observers[key].find(
+            observer => observer.component === componentInstance
+          );
+
+          if (!referenceInObserver) {
+            this.observers[key].push(
+              new Observer(aliasName, componentInstance)
+            );
+          }
+
           if (key in this.state) {
             componentInstance[aliasName] = this.state[key];
           }
         });
     }
+  }
+
+  deregister(component, componentInstance) {
+    Object.entries(component.properties)
+      .filter(([, value]) => value.fromContext)
+      .forEach(([aliasName, value]) => {
+        const key = 'contextKey' in value ? value.contextKey : aliasName;
+        this.observers[key] = this.observers[key].filter(
+          observer => observer.component !== componentInstance
+        );
+      });
   }
 
   /**
@@ -129,6 +149,11 @@ class Context {
         super(...args);
 
         context.register(component, this);
+      }
+
+      disconnectedCallback() {
+        context.deregister(component, this);
+        super.disconnectedCallback();
       }
 
       /**

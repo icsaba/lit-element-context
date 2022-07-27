@@ -1,6 +1,8 @@
 import { html, fixture, expect, elementUpdated } from '@open-wc/testing';
+import Sinon from 'sinon';
 
 import './components/lit-context.js';
+import './components/disconnect-wrapper.js';
 import context from '../src/context.js';
 import {
   incrementBy,
@@ -97,6 +99,61 @@ describe('LitContext', () => {
       expect(prevValue.textContent).to.equal(nextValue.textContent);
       expect(innerComponent.value1).to.equal('foo');
       expect(innerComponent.value2).to.equal('bar');
+    });
+  });
+
+  describe('observers', () => {
+    it('should add component to observers', async () => {
+      await fixture(html`<disconnect-wrapper></disconnect-wrapper>`);
+
+      expect(context.observers.someprop.length).to.equal(1);
+      expect(context.observers.value1.length).to.equal(1);
+      expect(context.observers.value2.length).to.equal(1);
+    });
+
+    it('should remove component from observers if component disconnected', async () => {
+      const el = await fixture(html`<disconnect-wrapper></disconnect-wrapper>`);
+      const spy = Sinon.spy(context, 'deregister');
+
+      el.showContextElement = false;
+      await elementUpdated(el);
+
+      expect(spy).to.have.been.called;
+      expect(context.observers.someprop.length).to.equal(0);
+      expect(context.observers.value1.length).to.equal(0);
+      expect(context.observers.value2.length).to.equal(0);
+    });
+
+    it('should add references of reusable component to observers', async () => {
+      await fixture(
+        html`<disconnect-wrapper showReusableElement></disconnect-wrapper>`
+      );
+
+      expect(context.observers.someprop[0].component.title).to.equal(
+        'undefined'
+      );
+      expect(context.observers.someprop[1].component.title).to.equal(
+        'Reusable'
+      );
+      expect(context.observers.someprop.length).to.equal(2);
+      expect(context.observers.value1.length).to.equal(2);
+      expect(context.observers.value2.length).to.equal(2);
+    });
+
+    it('should remove the right reference of reusable components from observers', async () => {
+      const el = await fixture(
+        html`<disconnect-wrapper showReusableElement></disconnect-wrapper>`
+      );
+
+      el.showReusableElement = false;
+      await elementUpdated(el);
+
+      expect(context.observers.someprop[0].component.title).to.equal(
+        'undefined'
+      );
+      expect(context.observers.someprop.length).to.equal(1);
+      expect(context.observers.value1.length).to.equal(1);
+      expect(context.observers.value2.length).to.equal(1);
     });
   });
 });

@@ -55,7 +55,7 @@ export class LitContext extends LitElement {
         </button>
       </div>
 
-      <lit-inner-component></lit-inner-component>
+      <lit-inner-component title=${this.title}></lit-inner-component>
     `;
   }
 }
