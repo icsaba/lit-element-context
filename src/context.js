@@ -12,8 +12,8 @@ class Context {
     this.state = {};
     this.reduxDevTools = null;
 
-    /** @type {WeakMap<string, Observer[]>} */
-    this.observers = new WeakMap();
+    /** @type {Object.<string, Observer[]>} */
+    this.observers = {};
   }
 
   /**
