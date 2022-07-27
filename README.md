@@ -11,6 +11,9 @@ you can find a working example in the `test/components` folder.
 
 ## New features
 
+Version 1.0.14
+- [x] remove component from observers when disconnected from DOM
+
 Version 1.0.13
 - [x] added meta information to the store init method
 
