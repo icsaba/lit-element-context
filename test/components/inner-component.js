@@ -13,14 +13,6 @@ class LitInnerComponent extends LitElement {
     }
   }
 
-  // static get propsFromContext() {
-  //   return {
-  //     someprop: 'renamedProp',
-  //     value1: 'value1',
-  //     value2: 'value2'
-  //   }
-  // }
-
   render() {
     return html`
       <div>

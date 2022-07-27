@@ -92,16 +92,6 @@ class MyLitComponent extends LitElement {
       renamedProp: {type: String}
     }
   }
-
-  /** 
-   * @deprecated
-   */
-  static get propsFromContext() {
-    return {
-      somepropFromContext: 'somepropFromContext',
-      somepropFromContext2: 'renamedProp'
-    };
-  }
 }
 ```
 

@@ -35,47 +35,29 @@ class Context {
   }
 
   register(component, componentInstance) {
-    if (component.propsFromContext) {
-      Object.entries(component.propsFromContext).forEach(
-        ([propName, aliasName]) => {
-          if (!(propName in this.observers)) {
-            this.observers[propName] = [];
-          }
+    Object.entries(component.properties)
+      .filter(([, value]) => value.fromContext)
+      .forEach(([aliasName, value]) => {
+        const key = 'contextKey' in value ? value.contextKey : aliasName;
 
-          this.observers[propName].push(
+        if (!(key in this.observers)) {
+          this.observers[key] = [];
+        }
+
+        const referenceInObserver = this.observers[key].find(
+          observer => observer.component === componentInstance
+        );
+
+        if (!referenceInObserver) {
+          this.observers[key].push(
             new Observer(aliasName, componentInstance)
           );
-
-          if (propName in this.state) {
-            componentInstance[aliasName] = this.state[propName];
-          }
         }
-      );
-    } else {
-      Object.entries(component.properties)
-        .filter(([, value]) => value.fromContext)
-        .forEach(([aliasName, value]) => {
-          const key = 'contextKey' in value ? value.contextKey : aliasName;
 
-          if (!(key in this.observers)) {
-            this.observers[key] = [];
-          }
-
-          const referenceInObserver = this.observers[key].find(
-            observer => observer.component === componentInstance
-          );
-
-          if (!referenceInObserver) {
-            this.observers[key].push(
-              new Observer(aliasName, componentInstance)
-            );
-          }
-
-          if (key in this.state) {
-            componentInstance[aliasName] = this.state[key];
-          }
-        });
-    }
+        if (key in this.state) {
+          componentInstance[aliasName] = this.state[key];
+        }
+      });
   }
 
   deregister(component, componentInstance) {
