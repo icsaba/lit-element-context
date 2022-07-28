@@ -18,6 +18,7 @@ export class LitContext extends LitElement {
     return {
       title: { type: String },
       counter: { type: Number },
+      showInner: { type: Boolean }
     };
   }
 
@@ -32,6 +33,8 @@ export class LitContext extends LitElement {
       true,
       { name: 'lit context store' }
     );
+
+    this.showInner = true;
   }
 
   render() {
@@ -55,7 +58,11 @@ export class LitContext extends LitElement {
         </button>
       </div>
 
-      <lit-inner-component title=${this.title}></lit-inner-component>
+      <button @click=${ () => {this.showInner = !this.showInner} }> toggle component</button>
+
+      ${
+        this.showInner && html`<lit-inner-component title=${this.title}></lit-inner-component>`
+      }
     `;
   }
 }

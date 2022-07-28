@@ -9,10 +9,11 @@ import Observer from './observer.js';
 
 class Context {
   constructor() {
+    this.prefix = '#_lit-context_';
     this.state = {};
     this.reduxDevTools = null;
 
-    /** @type {Object.<string, Observer[]>} */
+    /** @type {Object.<string, Set<Observer>>} */
     this.observers = {};
   }
 
@@ -27,48 +28,64 @@ class Context {
 
     if (enableDevTools) {
       const { target, ...options } = devToolsOptions;
+
       this.reduxDevTools = (
         target || window
       ).__REDUX_DEVTOOLS_EXTENSION__?.connect(options);
+
       this.reduxDevTools?.init(state);
     }
   }
 
-  register(component, componentInstance) {
+  /**
+   * @private
+   * @param {*} component
+   * @param {*} componentInstance
+   */
+  #register(component, componentInstance) {
     Object.entries(component.properties)
-      .filter(([, value]) => value.fromContext)
-      .forEach(([aliasName, value]) => {
-        const key = 'contextKey' in value ? value.contextKey : aliasName;
+      .forEach(([aliasName, property]) => {
+        if (property.fromContext) {
+          const key = 'contextKey' in property ? property.contextKey : aliasName;
 
-        if (!(key in this.observers)) {
-          this.observers[key] = [];
-        }
+          if (!(key in this.observers)) {
+            this.observers[key] = new Set();
+          }
 
-        const referenceInObserver = this.observers[key].find(
-          observer => observer.component === componentInstance
-        );
+          const observer = new Observer(aliasName, componentInstance);
 
-        if (!referenceInObserver) {
-          this.observers[key].push(
-            new Observer(aliasName, componentInstance)
-          );
-        }
+          this.observers[key].add(observer);
+          componentInstance[this.#getKey(key)] = observer;
 
-        if (key in this.state) {
-          componentInstance[aliasName] = this.state[key];
+          if (key in this.state) {
+            componentInstance[aliasName] = this.state[key];
+          }
         }
       });
   }
 
-  deregister(component, componentInstance) {
+  /**
+   * @private
+   * @param {*} component
+   * @param {*} componentInstance
+   */
+  #deregister(component, componentInstance) {
     Object.entries(component.properties)
-      .filter(([, value]) => value.fromContext)
       .forEach(([aliasName, value]) => {
-        const key = 'contextKey' in value ? value.contextKey : aliasName;
-        this.observers[key] = this.observers[key].filter(
-          observer => observer.component !== componentInstance
-        );
+        if (value.fromContext) {
+          const key = 'contextKey' in value ? value.contextKey : aliasName;
+          this.observers[key].delete(componentInstance[this.#getKey(key)]);
+        }
       });
+  }
+
+  /**
+   * @private
+   * @param {string} key
+   * @returns {string}
+   */
+  #getKey(key) {
+    return `${this.prefix}${key}`;
   }
 
   /**
@@ -78,14 +95,15 @@ class Context {
    */
   setProp(propName, value) {
     this.state[propName] = value;
+
     if (this.reduxDevTools) {
       this.reduxDevTools.send('setProp', { [propName]: value });
     }
 
     if (propName in this.observers) {
-      this.observers[propName].forEach(observer => {
-        observer.component[observer.aliasName] = value;
-      });
+      for (const {component, aliasName} of this.observers[propName]) {
+        component[aliasName] = value;
+      }
     }
   }
 
@@ -130,11 +148,11 @@ class Context {
       constructor(...args) {
         super(...args);
 
-        context.register(component, this);
+        context.#register(component, this);
       }
 
       disconnectedCallback() {
-        context.deregister(component, this);
+        context.#deregister(component, this);
         super.disconnectedCallback();
       }
 
