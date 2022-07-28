@@ -11,7 +11,10 @@ you can find a working example in the `test/components` folder.
 
 ## New features
 
-Version 1.0.14
+Version 1.1.0
+- [x] removed deprecated methods
+- [x] improved register and deregister methods on lifecycle 
+
 - [x] remove component from observers when disconnected from DOM
 
 Version 1.0.13
@@ -78,18 +81,6 @@ class MyLitComponent extends LitElement {
     return {
       somepropFromContext: {type: Number, fromContext: true},
       renamedProp: {type: String, fromContext: true, contextKey: 'somepropInTheStore'}
-    }
-  }
-}
-```
-
-`@deprecated` way was to provide an other getter, but it just increased the number of boilerplate code
-```javascript
-class MyLitComponent extends LitElement {
-  static get properties() {
-    return {
-      somepropFromContext: {type: Number},
-      renamedProp: {type: String}
     }
   }
 }
