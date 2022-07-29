@@ -92,11 +92,12 @@ class Context {
    *
    * @param {string} propName
    * @param {any} value
+   * @param {boolean} propsCalled
    */
-  setProp(propName, value) {
+  setProp(propName, value, propsCalled = false) {
     this.state[propName] = value;
 
-    if (this.reduxDevTools) {
+    if (!propsCalled && this.reduxDevTools) {
       this.reduxDevTools.send('setProp', { ...this.state });
     }
 
@@ -110,22 +111,28 @@ class Context {
   /**
    *
    * @param {Object<string, any>} props
+   * @param {string} [actionName]
    */
-  setProps(props) {
+  setProps(props, actionName = 'setProp') {
     Object.entries(props).forEach(([propName, value]) => {
-      this.setProp(propName, value);
+      this.setProp(propName, value, true);
     });
+
+    if (this.reduxDevTools) {
+      this.reduxDevTools.send(actionName, { ...this.state });
+    }
   }
 
   /**
    *
    * @param {(state: Object, ...params: any[]) => void} callback
+   * @param {string} [actionName]
    * @returns {(...params: any[]) => void}
    */
-  action(callback) {
+  action(callback, actionName) {
     return (...params) => {
       const nextState = callback(this.state, ...params);
-      this.setProps(nextState);
+      this.setProps(nextState, callback.name || actionName);
     };
   }
 
