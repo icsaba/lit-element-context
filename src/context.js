@@ -97,7 +97,7 @@ class Context {
     this.state[propName] = value;
 
     if (this.reduxDevTools) {
-      this.reduxDevTools.send('setProp', { [propName]: value });
+      this.reduxDevTools.send('setProp', { ...this.state });
     }
 
     if (propName in this.observers) {
