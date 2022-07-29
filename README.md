@@ -11,6 +11,9 @@ you can find a working example in the `test/components` folder.
 
 ## New features
 
+Version 1.1.1
+- [x] improved redux devtools usage
+
 Version 1.1.0
 - [x] removed deprecated methods
 - [x] improved register and deregister methods on lifecycle 
