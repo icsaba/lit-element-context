@@ -18,7 +18,7 @@ export class LitContext extends LitElement {
     return {
       title: { type: String },
       counter: { type: Number },
-      showInner: { type: Boolean }
+      showInner: { type: Boolean },
     };
   }
 
@@ -31,7 +31,7 @@ export class LitContext extends LitElement {
         value1: 'initial value',
       },
       true,
-      { name: 'lit context store' }
+      { name: 'lit context store' },
     );
 
     this.showInner = true;
@@ -40,29 +40,24 @@ export class LitContext extends LitElement {
   render() {
     return html`
       <div>
-        <button
-          @click=${() =>
-            context.setProp('someprop', context.state.someprop + 1)}
-        >
-          increment
-        </button>
+        <button @click=${() => context.setProp('someprop', context.state.someprop + 1)}>increment</button>
       </div>
       <div>
-        <button id="increment_by_action" @click=${() => incrementBy(3)}>
-          increment by 3
-        </button>
+        <button id="increment_by_action" @click=${() => incrementBy(3)}>increment by 3</button>
       </div>
       <div>
-        <button id="decrement_by_action" @click=${() => decrementBy(2)}>
-          decrement by 2
-        </button>
+        <button id="decrement_by_action" @click=${() => decrementBy(2)}>decrement by 2</button>
       </div>
 
-      <button @click=${ () => {this.showInner = !this.showInner} }> toggle component</button>
+      <button
+        @click=${() => {
+          this.showInner = !this.showInner;
+        }}
+      >
+        toggle component
+      </button>
 
-      ${
-        this.showInner && html`<lit-inner-component title=${this.title}></lit-inner-component>`
-      }
+      ${this.showInner && html`<lit-inner-component title=${this.title}></lit-inner-component>`}
     `;
   }
 }

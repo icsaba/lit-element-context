@@ -1,17 +1,8 @@
-/**
- * @typedef {Object} Component
- * @property {Object.<string, string>} propsFromState
- *
- * @typedef {import('lit-element').LitElement} LitElement
- * @typedef {LitElement & Component} LitComponent
- *
- */
-
 export default class Observer {
   /**
    *
    * @param {string} alias
-   * @param {LitComponent} component
+   * @param {import('lit-element').LitElement} component
    */
   constructor(alias, component) {
     this.aliasName = alias;
@@ -25,7 +16,7 @@ export default class Observer {
 
   get component() {
     if (window.WeakRef) {
-      return this.ref.deref();
+      return /** @type {WeakRef<import('lit-element').LitElement>} */ (this.ref).deref();
     }
 
     return this.ref;

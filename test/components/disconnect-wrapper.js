@@ -22,8 +22,7 @@ export class DisconnectWrapper extends LitElement {
 
   renderContent() {
     return html`${this.showReusableElement
-      ? html`<lit-context></lit-context
-          ><lit-context title="Reusable"></lit-context>`
+      ? html`<lit-context></lit-context><lit-context title="Reusable"></lit-context>`
       : html`<lit-context></lit-context>`}`;
   }
 }

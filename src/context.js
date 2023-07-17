@@ -1,16 +1,20 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable max-classes-per-file */
 import Observer from './observer.js';
 
 /**
+ * @typedef { import('../global.js')} placeHolder overrides the consumers global types
  * @typedef { import('../types/devtools-options').DevToolsOptions } devToolsOptions
+ * @typedef {import('lit-element').LitElement} LitElement
+ * @typedef {typeof import('lit-element').LitElement} LitClass
+ * @typedef {{[key: string]: any}} State
  */
 
-class Context {
+export class Context {
   constructor() {
     this.prefix = '#_lit-context_';
+
+    /** @type {State} */
     this.state = {};
+
     this.reduxDevTools = null;
 
     /** @type {Object.<string, Set<Observer>>} */
@@ -19,64 +23,79 @@ class Context {
 
   /**
    *
-   * @param { Object } state
-   * @param { boolean } enableDevTools
-   * @param { devToolsOptions } devToolsOptions
+   * @param { State } state
+   * @param { boolean } [enableDevTools]
+   * @param { devToolsOptions } [devToolsOptions]
    */
-  init(state, enableDevTools = false, devToolsOptions = {}) {
+  init(state, enableDevTools = false, devToolsOptions = { target: window }) {
     this.state = state;
 
     if (enableDevTools) {
-      const { target, ...options } = devToolsOptions;
+      const { target = window, ...options } = devToolsOptions;
 
-      this.reduxDevTools = (
-        target || window
-      ).__REDUX_DEVTOOLS_EXTENSION__?.connect(options);
-
-      this.reduxDevTools?.init(state);
+      if (target.__REDUX_DEVTOOLS_EXTENSION__) {
+        this.reduxDevTools = target.__REDUX_DEVTOOLS_EXTENSION__.connect(options);
+        this.reduxDevTools.init(state);
+      }
     }
   }
 
   /**
    * @private
-   * @param {*} component
-   * @param {*} componentInstance
+   * @param {LitClass} component
+   * @return {{[propName: string]: any}}
    */
-  #register(component, componentInstance) {
-    Object.entries(component.properties)
-      .forEach(([aliasName, property]) => {
-        if (property.fromContext) {
-          const key = 'contextKey' in property ? property.contextKey : aliasName;
+  static getProperties(component) {
+    if ('elementProperties' in component) {
+      return Array.from(/** @type {Iterable<any>} */ (component.elementProperties));
+    }
 
-          if (!(key in this.observers)) {
-            this.observers[key] = new Set();
-          }
-
-          const observer = new Observer(aliasName, componentInstance);
-
-          this.observers[key].add(observer);
-          componentInstance[this.#getKey(key)] = observer;
-
-          if (key in this.state) {
-            componentInstance[aliasName] = this.state[key];
-          }
-        }
-      });
+    return Object.entries(component.properties);
   }
 
   /**
    * @private
-   * @param {*} component
-   * @param {*} componentInstance
+   * @param {LitClass} component
+   * @param {LitElement} componentInstance
    */
-  #deregister(component, componentInstance) {
-    Object.entries(component.properties)
-      .forEach(([aliasName, value]) => {
-        if (value.fromContext) {
-          const key = 'contextKey' in value ? value.contextKey : aliasName;
-          this.observers[key].delete(componentInstance[this.#getKey(key)]);
+  register(component, componentInstance) {
+    const properties = Context.getProperties(component);
+
+    properties.forEach(([aliasName, property]) => {
+      if (property.fromContext) {
+        const key = 'contextKey' in property ? property.contextKey : aliasName;
+
+        if (!(key in this.observers)) {
+          this.observers[key] = new Set();
         }
-      });
+
+        const observer = new Observer(aliasName, componentInstance);
+
+        this.observers[key].add(observer);
+        componentInstance[this.getKey(key)] = observer;
+
+        if (key in this.state) {
+          componentInstance[aliasName] = this.state[key];
+        }
+      }
+    });
+  }
+
+  /**
+   *
+   * @private
+   * @param {LitClass} component
+   * @param {LitElement} componentInstance
+   */
+  deregister(component, componentInstance) {
+    const properties = Context.getProperties(component);
+
+    properties.forEach(([aliasName, value]) => {
+      if (value.fromContext) {
+        const key = 'contextKey' in value ? value.contextKey : aliasName;
+        this.observers[key].delete(componentInstance[this.getKey(key)]);
+      }
+    });
   }
 
   /**
@@ -84,7 +103,7 @@ class Context {
    * @param {string} key
    * @returns {string}
    */
-  #getKey(key) {
+  getKey(key) {
     return `${this.prefix}${key}`;
   }
 
@@ -102,7 +121,7 @@ class Context {
     }
 
     if (propName in this.observers) {
-      for (const {component, aliasName} of this.observers[propName]) {
+      for (const { component, aliasName } of this.observers[propName]) {
         component[aliasName] = value;
       }
     }
@@ -125,7 +144,7 @@ class Context {
 
   /**
    *
-   * @param {(state: Object, ...params: any[]) => void} callback
+   * @param {(state: State, ...params: any[]) => State} callback
    * @param {string} [actionName]
    * @returns {(...params: any[]) => void}
    */
@@ -138,7 +157,7 @@ class Context {
 
   /**
    *
-   * @param {(state: Object, ...params: any[]) => Promise<void>} callback
+   * @param {(state: State, ...params: any[]) => Promise<State>} callback
    * @returns { (...params: any[]) => Promise<void> }
    */
   asyncAction(callback) {
@@ -148,18 +167,22 @@ class Context {
     };
   }
 
-  connect(component) {
+  /**
+   *
+   * @param {LitClass} superClass
+   */
+  connect(superClass) {
     const context = this;
 
-    return class extends component {
-      constructor(...args) {
-        super(...args);
+    return class extends superClass {
+      constructor() {
+        super();
 
-        context.#register(component, this);
+        context.register(superClass, this);
       }
 
       disconnectedCallback() {
-        context.#deregister(component, this);
+        context.deregister(superClass, this);
         super.disconnectedCallback();
       }
 
@@ -175,12 +198,21 @@ class Context {
       /**
        * Accepts key-value pairs
        *
-       * @param { Object<string, any>} props
+       * @param { State } props
        */
       setProps(props) {
         context.setProps(props);
       }
     };
+  }
+
+  /**
+   *
+   * Decorator for ts-lit
+   * @returns { (clazz: any) => any }
+   */
+  connectElement() {
+    return clazz => this.connect(clazz);
   }
 }
 

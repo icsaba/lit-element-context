@@ -11,6 +11,9 @@ you can find a working example in the `test/components` folder.
 
 ## New features
 
+Version 1.2.0
+- [x] added TS support for `lit-ts`
+
 Version 1.1.1
 - [x] improved redux devtools usage
 
@@ -65,7 +68,7 @@ import context from 'lit-element-simple-context';
 context.init({...}, true, { name: 'lit context store' });
 ```
 
-connect a lit component to the context
+connect a lit component to the context in JS
 ```javascript
 import { LitElement } from 'lit';
 import context from 'lit-element-simple-context';
@@ -73,6 +76,16 @@ import context from 'lit-element-simple-context';
 class MyLitComponent extends LitElement {}
 
 window.customElements.define('my-lit-component', context.connect(MyLitComponent));
+```
+
+connect a lit component to the context in TS
+```typescript
+import { LitElement } from 'lit';
+import context from 'lit-element-simple-context';
+
+@customElement('my-lit-component')
+@context.connectElement()
+export class MyLitComponent extends LitElement {}
 ```
 
 To specify the props you need from context in your component, you should set `fromContext` attribute in the `properties` getter. 
@@ -86,6 +99,21 @@ class MyLitComponent extends LitElement {
       renamedProp: {type: String, fromContext: true, contextKey: 'somepropInTheStore'}
     }
   }
+}
+```
+
+You can do it in TS as well:
+```typescript
+import { LitElement } from 'lit';
+import context from 'lit-element-simple-context';
+
+@customElement('my-lit-component')
+@context.connectElement()
+export class MyLitComponent extends LitElement {
+
+  @property({fromContext: true})
+  somepropFromContext = '';
+  
 }
 ```
 

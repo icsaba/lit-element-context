@@ -1,0 +1,29 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "es6": true,
+    "jest": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "plugins": ["jsdoc", "prettier"],
+  "extends": [
+    "@open-wc/eslint-config",
+    "eslint-config-prettier"
+  ],
+  "ignorePatterns": [
+    "**/*.html"
+  ],
+  "rules": {
+    "max-classes-per-file": 0,
+    "prettier/prettier": "error",
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "allowImportExportEverywhere": 0,
+    "class-methods-use-this": 0,
+    "no-param-reassign": 0
+  }
+}
