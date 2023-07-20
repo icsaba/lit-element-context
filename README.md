@@ -11,6 +11,9 @@ you can find a working example in the `test/components` folder.
 
 ## New features
 
+Version 1.2.5
+- [x] changed "module" to "ES6"
+
 Version 1.2.1
 - [x] added generic types for state
 

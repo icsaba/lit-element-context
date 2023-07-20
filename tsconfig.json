@@ -3,13 +3,14 @@
     "allowJs": true,
     "checkJs": true,
     "esModuleInterop": true,
-    "module": "commonjs",
+    "module": "ES6",
     "target": "es6",
+    "moduleResolution": "Node",
     "outDir": "dist",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     "declaration": true,
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
   },
   "include": ["src", "global.d.ts"],
   "exclude": ["node_modules"]
