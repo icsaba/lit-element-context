@@ -11,6 +11,9 @@ you can find a working example in the `test/components` folder.
 
 ## New features
 
+Version 1.2.1
+- [x] added generic types for state
+
 Version 1.2.0
 - [x] added TS support for `lit-ts`
 
@@ -80,8 +83,11 @@ window.customElements.define('my-lit-component', context.connect(MyLitComponent)
 
 connect a lit component to the context in TS
 ```typescript
-import { LitElement } from 'lit';
-import context from 'lit-element-simple-context';
+import { LitElement, property } from 'lit';
+import { Context } from 'lit-element-simple-context';
+
+type MyContextType = {};
+const context = new Context<MyContextType>();
 
 @customElement('my-lit-component')
 @context.connectElement()
@@ -102,10 +108,29 @@ class MyLitComponent extends LitElement {
 }
 ```
 
-You can do it in TS as well:
+You can do it in TS as well with either using the default typings or your custom state type:
 ```typescript
 import { LitElement } from 'lit';
 import context from 'lit-element-simple-context';
+
+@customElement('my-lit-component')
+@context.connectElement()
+export class MyLitComponent extends LitElement {
+
+  @property({fromContext: true})
+  somepropFromContext = '';
+  
+}
+```
+
+With custom types: 
+
+```typescript
+import { LitElement, property } from 'lit';
+import { Context } from 'lit-element-simple-context';
+
+type MyContextType = {};
+const context = new Context<MyContextType>();
 
 @customElement('my-lit-component')
 @context.connectElement()

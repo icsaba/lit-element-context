@@ -5,15 +5,17 @@ import Observer from './observer.js';
  * @typedef { import('../types/devtools-options').DevToolsOptions } devToolsOptions
  * @typedef {import('lit-element').LitElement} LitElement
  * @typedef {typeof import('lit-element').LitElement} LitClass
- * @typedef {{[key: string]: any}} State
  */
 
+/**
+ * @template {{}} TState
+ */
 export class Context {
   constructor() {
     this.prefix = '#_lit-context_';
 
-    /** @type {State} */
-    this.state = {};
+    /** @type {TState} */
+    this.state = null;
 
     this.reduxDevTools = null;
 
@@ -22,8 +24,7 @@ export class Context {
   }
 
   /**
-   *
-   * @param { State } state
+   * @param { TState } state
    * @param { boolean } [enableDevTools]
    * @param { devToolsOptions } [devToolsOptions]
    */
@@ -144,7 +145,7 @@ export class Context {
 
   /**
    *
-   * @param {(state: State, ...params: any[]) => State} callback
+   * @param {(state: TState, ...params: any[]) => TState} callback
    * @param {string} [actionName]
    * @returns {(...params: any[]) => void}
    */
@@ -157,7 +158,7 @@ export class Context {
 
   /**
    *
-   * @param {(state: State, ...params: any[]) => Promise<State>} callback
+   * @param {(state: TState, ...params: any[]) => Promise<TState>} callback
    * @returns { (...params: any[]) => Promise<void> }
    */
   asyncAction(callback) {
@@ -198,7 +199,7 @@ export class Context {
       /**
        * Accepts key-value pairs
        *
-       * @param { State } props
+       * @param { TState } props
        */
       setProps(props) {
         context.setProps(props);
