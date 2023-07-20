@@ -145,7 +145,7 @@ export class Context {
 
   /**
    *
-   * @param {(state: TState, ...params: any[]) => TState} callback
+   * @param {(state: TState, ...params: any[]) => Partial<TState>} callback
    * @param {string} [actionName]
    * @returns {(...params: any[]) => void}
    */
@@ -158,7 +158,7 @@ export class Context {
 
   /**
    *
-   * @param {(state: TState, ...params: any[]) => Promise<TState>} callback
+   * @param {(state: TState, ...params: any[]) => Promise<Partial<TState>>} callback
    * @returns { (...params: any[]) => Promise<void> }
    */
   asyncAction(callback) {
@@ -199,7 +199,7 @@ export class Context {
       /**
        * Accepts key-value pairs
        *
-       * @param { TState } props
+       * @param { Partial<TState> } props
        */
       setProps(props) {
         context.setProps(props);
