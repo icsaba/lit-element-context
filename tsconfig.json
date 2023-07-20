@@ -9,6 +9,7 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     "declaration": true,
+    "inlineSourceMap": true
   },
   "include": ["src", "global.d.ts"],
   "exclude": ["node_modules"]
