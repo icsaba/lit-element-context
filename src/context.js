@@ -1,7 +1,7 @@
 import Observer from './observer.js';
 
 /**
- * @typedef { import('../global.js')} placeHolder overrides the consumers global types
+ * @typedef { import('../global.d.ts')} placeHolder overrides the consumers global types
  * @typedef { import('../types/devtools-options').DevToolsOptions } devToolsOptions
  * @typedef {import('lit-element').LitElement} LitElement
  * @typedef {typeof import('lit-element').LitElement} LitClass

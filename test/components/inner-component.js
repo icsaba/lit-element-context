@@ -12,6 +12,14 @@ class LitInnerComponent extends LitElement {
     };
   }
 
+  constructor() {
+    super();
+
+    this.renamedProp = undefined;
+    this.value1 = undefined;
+    this.value2 = undefined;
+  }
+
   render() {
     return html`
       <div>
